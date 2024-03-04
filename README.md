@@ -15,7 +15,7 @@ Easily automate the retrieval of the latest high court orders or judgements and 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Running the Script](#running-the-script)
-- [Working Screenshot Example](#working-screenshot-example)
+- [Working Example](#working-example)
 - [PREVIOUS ATTEMPT OF SIDE FILE](#previous-attempt-of-selenium-ide-file)
 - [Future Improvements](#future-improvements-that-can-be-done)
 
@@ -39,11 +39,13 @@ To execute the script, use the command below in your terminal:
 python3 main.py
 ```
 
-## Working Screenshot Example:
+## Working Example:
 
-*Below is a successful execution snapshot showing the terminal output after the script has fetched a high court judgement.*
+*Below is a successful execution showing the terminal output after the script has fetched a high court judgement.*
 
-![Terminal Output](https://github.com/HistoriFy/SCR-Judgements/assets/67834542/de702721-2332-4642-bd08-37566a78ba6e)
+
+[Example](https://github.com/HistoriFy/Judgements/assets/67834542/404c2de8-fa51-433e-955c-7e437a6290d2)
+
 
 ---
 
