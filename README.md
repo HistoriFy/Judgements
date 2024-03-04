@@ -39,6 +39,8 @@ To execute the script, use the command below in your terminal:
 python3 main.py
 ```
 
+**Important:** There might be instances where script execution is interrupted due to downtime of the OCR API, as its free version is being used. If you encounter any issues, such as script stalling or delays, please wait for some time and try running the script again. I appreciate your understanding and patience.
+
 ## Working Example:
 
 *Below is a successful execution showing the terminal output after the script has fetched a high court judgement.*
