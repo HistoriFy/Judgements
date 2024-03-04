@@ -44,8 +44,7 @@ python3 main.py
 *Below is a successful execution showing the terminal output after the script has fetched a high court judgement.*
 
 
-[Example](https://github.com/HistoriFy/Judgements/assets/67834542/404c2de8-fa51-433e-955c-7e437a6290d2)
-
+https://github.com/HistoriFy/Judgements/assets/67834542/aa8a48f9-44b6-4755-9ad5-2d3514366c74
 
 ---
 
