@@ -2,12 +2,19 @@
 
 Easily automate the retrieval of the latest high court orders or judgements and save them in PDF format with this script.
 
+1. **Open the URL**: The script initiates a Chrome browser session using Selenium WebDriver.
+2. **Select High Court**: Focuses on retrieving documents from the "High Court" section.
+3. **Captcha Resolution**: Utilizes OCR to decipher captchas, with retries if necessary.
+4. **Extract Case Information**: Details of cases are extracted for further actions.
+5. **PDF Retrieval**: Waits for the PDF link, captures a screenshot, and then downloads the PDF.
+6. **Save PDF**: The document is saved in the current directory with an appropriate name.
+7. **Cleanup**: Closes the browser to conclude the session.
+
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Running the Script](#running-the-script)
-- [Script Workflow](#script-workflow)
 - [Working Screenshot Example](#working-screenshot-example)
 - [PREVIOUS ATTEMPT OF SIDE FILE](#previous-attempt-of-selenium-ide-file)
 - [Future Improvements](#future-improvements-that-can-be-done)
@@ -31,18 +38,6 @@ To execute the script, use the command below in your terminal:
 ```bash
 python3 main.py
 ```
-
-## Script Workflow
-1. **Open the URL**: The script initiates a Chrome browser session using Selenium WebDriver.
-2. **Select High Court**: Focuses on retrieving documents from the "High Court" section.
-3. **Captcha Resolution**: Utilizes OCR to decipher captchas, with retries if necessary.
-4. **Extract Case Information**: Details of cases are extracted for further actions.
-5. **PDF Retrieval**: Waits for the PDF link, captures a screenshot, and then downloads the PDF.
-6. **Save PDF**: The document is saved in the current directory with an appropriate name.
-7. **Cleanup**: Closes the browser to conclude the session.
-
-These sections explain the setup, operation, and flow of the script for successful execution.
-
 
 ## Working Screenshot Example:
 
