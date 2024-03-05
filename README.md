@@ -46,9 +46,11 @@ python3 main.py
 *Below is a successful execution showing the terminal output after the script has fetched a high court judgement.*
 
 
-https://github.com/HistoriFy/Judgements/assets/67834542/aa8a48f9-44b6-4755-9ad5-2d3514366c74
+
+https://github.com/HistoriFy/Judgements/assets/67834542/8f07560b-a779-468e-a709-20d4db920313
 
 ---
+
 
 ## Previous Attempt of Selenium IDE File
 
@@ -58,13 +60,13 @@ Several attempts were made to directly fetch the PDF using Selenium IDE. Unfortu
 1. **Captcha Source URL**: The initial strategy to copy the source URL of the captcha image was unsuccessful because the captcha is dynamically regenerated with each request. This regeneration occurs whether the request is made independently or alongside the website's own requests. You can witness this behavior by visiting the [captcha URL](https://judgments.ecourts.gov.in/pdfsearch/vendor/securimage/securimage_show.php) and just refreshing it.
 
    
-2. **Clipboard Execution**: The approach of using the `execute_script` function to copy the captcha into the clipboard was also unsuccessful.
+2. **Storing captcha image**: The approach of using the `execute_script` function to copy the captcha into the clipboard or storage was also unsuccessful.
 
 3. **Google Lens Parsing**: Trying to parse the captcha with Google Lens did not work as controlling the newly opened window was problematic. The process consistently failed despite attempts to use the `title` or `window handle` of the tab.
 
 ![Selenium IDE Attempt](https://github.com/HistoriFy/SCR-Judgements/assets/67834542/a96368e3-205f-45f6-85ac-f638e8014260)
 
-Ultimately, I transitioned to using the WebDriver approach. Suggestions for making the Selenium IDE file work are greatly welcomed.
+Ultimately, I transitioned to using the WebDriver approach. Suggestions for making the Selenium SIDE file work are greatly welcomed.
 
 ## Future Improvements That Can Be Done:
 
