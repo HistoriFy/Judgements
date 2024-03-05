@@ -15,9 +15,8 @@
 # Flow of main.py
 # 1. Open the URL in a Chrome browser using Selenium WebDriver.
 # 2. Select the "High Court" option from the dropdown due to constant updates
-# 3. Attempt to solve the captcha by capturing the image and using OCR to extract the text.
-# 4. If the captcha is not solved, attempt to solve it again.
-# 5. If the captcha is still not solved, exit the script.
+# 3. Try to solve the captcha by saving its screenshot and running OCR on it.
+# 4. If the captcha is not solved, try to solve it again. Exit at the end if the captcha is not solved.
 # 6. Extract the case information from the table and click on the first case to view the details.
 # 7. Wait for the PDF link to be accessible and capture a screenshot of the page.
 # 8. Extract the PDF link and save the PDF file to the current working directory.
@@ -28,6 +27,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
 import time
+import sys
 import os
 
 from captcha_solver import  attempt_to_solve_captcha, handle_captcha_validation
@@ -37,11 +37,14 @@ from config import configure_chrome_options
 
 
 def main():
+    
+    website = 'https://judgments.ecourts.gov.in/pdfsearch/index.php'
+    
     driver = webdriver.Chrome(options=configure_chrome_options())
-    driver.get('https://judgments.ecourts.gov.in/pdfsearch/index.php')
+    driver.get(website)
     driver.implicitly_wait(10)
     
-    #Selecting High Court Cases due to large number of cases and constant update
+    #Selecting High Court Cases due to large number of cases and constant updates
     
     high_court_option = driver.find_element(By.XPATH, '//select[@id="fcourt_type"]//option[contains(text(),"High Court")]')
     high_court_option.click()
@@ -59,6 +62,25 @@ def main():
     # Wait for the page to load
     driver.implicitly_wait(5)
     try:
+        
+        # Select the last week from the decision date dropdown
+        
+        decision_date_drop_down_element = driver.find_element(By.XPATH, '//i[contains(@class,"calendar")]/parent::a')
+        decision_date_drop_down_element.click()
+        
+        time.sleep(2)
+        
+        last_week_option_element = driver.find_element(By.XPATH, '//input[@value="WEEK"]')
+        last_week_option_element.click()
+        
+        time.sleep(2)
+        
+        search_button_element = driver.find_element(By.XPATH, '//i[contains(@class,"search")]/parent::button')
+        search_button_element.click()
+        
+        #wait for page to load again after updating the list with LATEST UPDATED case
+        time.sleep(5)     
+        
         # Extract case information
         cases_table = driver.find_element(By.XPATH, '//tbody[@id="report_body"]')
         first_case = cases_table.find_element(By.XPATH, './/tr[1]/td[not(contains(@class, "sorting"))]')
@@ -89,7 +111,14 @@ def main():
         print(f"PDF Path: {pdf_path}")
         
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred: \n")
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(f"Error File: {fname}")
+        print(f"Error Type: {exc_type}")
+        print(f"Error Object: {exc_obj}")
+        print(f"Error Line: {exc_tb.tb_lineno}")
+
     finally:
         driver.quit()
 

@@ -9,11 +9,13 @@
 # The response is in JSON format, and we extract the text from the `ParsedResults` field.
 # The extracted text is then returned to the calling function.
 
-# We are currently using engine 2 for OCR which is better for numbers and special characters.
+# I am currently using engine 2 for OCR which is better for numbers and special characters.
 
+from dotenv import load_dotenv
 import requests
+import os
 
-from utils import image_to_base64, capture_captcha_image
+from utils import image_to_base64
 
 def solve_captcha(image_path):
     """Solve the captcha using OCR.space API.
@@ -23,12 +25,16 @@ def solve_captcha(image_path):
 
     Returns:
         str: Extracted text from the captcha image.
-    """    
+    """
+    #load api key 
+    load_dotenv()
+    ocr_api_key = os.getenv('OCR_API_KEY')    
     base64_image = f'data:image/png;base64,{image_to_base64(image_path)}'
+    
     ocr_url = "https://api.ocr.space/parse/image"
     payload = {'language': 'eng', 'filetype': 'PNG', 'OCREngine': '2'}
     files = {'base64image': (None, base64_image)}
-    headers = {'apikey': 'K89610423888957'}  # Replace with your OCR.space API key
+    headers = {'apikey':ocr_api_key }  
 
     response = requests.post(ocr_url, headers=headers, data=payload, files=files)
     result = response.json()
