@@ -9,6 +9,7 @@
 
 from selenium.webdriver.chrome.options import Options
 
+
 def configure_chrome_options():
     """Configure Chrome options for the WebDriver.
     Returns:
@@ -17,7 +18,10 @@ def configure_chrome_options():
     
     options = Options()
     options.add_experimental_option('excludeSwitches', ['enable-logging']) # Disable default selenium logging
+    options.add_argument('--incognito')
     options.add_argument('--start-maximized')
     options.add_argument('--disable-blink-features=AutomationControlled')
     # options.add_argument('--headless')  # Disable this if you want to see the browser interaction
+    
+    
     return options

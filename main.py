@@ -24,6 +24,8 @@
 
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import requests
 import time
@@ -40,7 +42,13 @@ def main():
     
     website = 'https://judgments.ecourts.gov.in/pdfsearch/index.php'
     
-    driver = webdriver.Chrome(options=configure_chrome_options())
+    #disabling webdriver-manager chrome driver installation logs
+    os.environ['WDM_LOG'] = '0'
+    
+    # setting up the chrome webdriver
+    chrome_service = Service(ChromeDriverManager().install())
+  
+    driver = webdriver.Chrome(service=chrome_service,options= configure_chrome_options())
     driver.get(website)
     driver.implicitly_wait(10)
     
@@ -50,12 +58,15 @@ def main():
     high_court_option.click()
     print("High Court option selected")
     
+    #attempting to solve the captcha
     captcha_text = attempt_to_solve_captcha(driver)
     if not captcha_text:
         driver.quit()
         return
 
+    # If the captcha solving task fails after 2 attempts. Exit the script
     if not handle_captcha_validation(driver):
+        print("Captcha solving failed after 2 attempts. Please re-run the script after some time.")
         driver.quit()
         return
     
@@ -99,9 +110,9 @@ def main():
         first_case_pdf_link = driver.find_element(By.XPATH, '//div[@id="viewFiles-body"]/object').get_attribute('data')
         print("PDF link: ", first_case_pdf_link)
         
+        #remove unsupported file name characters from pdf_name
         pdf_name = sanitize_filename(first_case_heading) + ".pdf"
         pdf_path = os.path.join(os.getcwd(), pdf_name)
-        
         
         pdf_response = requests.get(first_case_pdf_link)
         
