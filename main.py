@@ -42,8 +42,9 @@ def main():
     
     website = 'https://judgments.ecourts.gov.in/pdfsearch/index.php'
     
-    #disabling webdriver-manager chrome driver installation logs
-    os.environ['WDM_LOG'] = '0'
+    # disabling webdriver-manager chrome driver installation logs
+    # uncomment the below line to disable it
+    # os.environ['WDM_LOG'] = '0'
     
     # setting up the chrome webdriver
     chrome_service = Service(ChromeDriverManager().install())
@@ -135,5 +136,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
