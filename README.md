@@ -25,8 +25,6 @@ Ensure Python is installed on your system. If not, you can install it from [Pyth
 sudo apt-get install python3
 ```
 
-**Note:** This script assumes that you have the Chrome browser already installed on your system as it uses Selenium WebDriver, which interacts with the Chrome browser. If Chrome is not installed, please download and install it from [Google Chrome's official site](https://www.google.com/chrome/). Refer to this line in the script for more information: [main.py/#L40](https://github.com/HistoriFy/SCR-Judgements/blob/main/main.py/#L40).
-
 ## Installation
 1. **Install Required Python Packages**: To install the necessary dependencies, execute the following command in your terminal:
 ```bash
@@ -39,7 +37,9 @@ To execute the script, use the command below in your terminal:
 python3 main.py
 ```
 
-**Important:** There might be instances where script execution is interrupted due to downtime of the OCR API, as its free version is being used. If you encounter any issues, such as script stalling or delays, please wait for some time and try running the script again. I appreciate your understanding and patience.
+**Important:** 
+1. The first run of the script might take a little longer due to the initial setup of the Chrome WebDriver. Subsequent runs will be faster.
+2. There might be instances where script execution is interrupted due to downtime of the OCR API, as its free version is being used. If you encounter any issues, such as script stalling or delays, please wait for some time and try running the script again. I appreciate your understanding and patience.
 
 ## Working Example:
 
@@ -65,6 +65,9 @@ Several attempts were made to directly fetch the PDF using Selenium IDE. Unfortu
 3. **Google Lens Parsing**: Trying to parse the captcha with Google Lens did not work as controlling the newly opened window was problematic. The process consistently failed despite attempts to use the `title` or `window handle` of the tab.
 
 ![Selenium IDE Attempt](https://github.com/HistoriFy/SCR-Judgements/assets/67834542/a96368e3-205f-45f6-85ac-f638e8014260)
+
+4. **HTML2Canvas, Axios/Fetch Attempt:** External libraries such as `html2canvas` and `axios/fetch` were necessary to capture a screenshot of the captcha and solve it through the OCR API. However, importing these libraries into the console of the tab controlled by Selenium IDE required the use of `<script>` tags. These scripts needed to be either hosted on a CDN or locally, and attention also had to be given to the CORS security of the page. This entire process proved to be challenging with just the `execute_script` support of Selenium IDE.
+
 
 Ultimately, I transitioned to using the WebDriver approach. Suggestions for making the Selenium SIDE file work are greatly welcomed.
 
