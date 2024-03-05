@@ -40,6 +40,7 @@ python3 main.py
 **Important:** 
 1. The first run of the script might take a little longer due to the initial setup of the Chrome WebDriver. Subsequent runs will be faster.
 2. There might be instances where script execution is interrupted due to downtime of the OCR API, as its free version is being used. If you encounter any issues, such as script stalling or delays, please wait for some time and try running the script again. I appreciate your understanding and patience.
+3. It is highly suggested to run the code in a virtual environment to avoid any conflicts with the existing packages in your system. To learn more about virtual environments, please visit the [official Python documentation](https://docs.python.org/3/library/venv.html).
 
 ## Working Example:
 
