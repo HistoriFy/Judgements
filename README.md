@@ -44,11 +44,17 @@ python3 main.py
 
 ## Working Example:
 
-*Below is a successful execution showing the terminal output after the script has fetched a high court judgement.*
+*Below are examples of successful execution for Ubuntu as well as Windows. Each stage is logged in the terminal.*
+
+https://github.com/HistoriFy/Judgements/assets/67834542/aa039b0c-44f1-4e93-a1f4-ee94be59d996
 
 
 
-https://github.com/HistoriFy/Judgements/assets/67834542/8f07560b-a779-468e-a709-20d4db920313
+
+https://github.com/HistoriFy/Judgements/assets/67834542/568bcd36-5682-4da0-b3c7-4a50e1a6cc42
+
+
+
 
 ---
 
