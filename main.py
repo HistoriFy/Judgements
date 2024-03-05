@@ -25,17 +25,21 @@
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+
+from webdriver_manager.chrome import ChromeDriverManager
+
 import requests
 import time
 import sys
 import os
 
 from captcha_solver import  attempt_to_solve_captcha, handle_captcha_validation
-from utils import sanitize_filename
+from utils import sanitize_filename, select_high_court
 from config import configure_chrome_options
-
 
 
 def main():
@@ -51,13 +55,10 @@ def main():
   
     driver = webdriver.Chrome(service=chrome_service,options= configure_chrome_options())
     driver.get(website)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(5)
     
     #Selecting High Court Cases due to large number of cases and constant updates
-    
-    high_court_option = driver.find_element(By.XPATH, '//select[@id="fcourt_type"]//option[contains(text(),"High Court")]')
-    high_court_option.click()
-    print("High Court option selected")
+    select_high_court(driver)
     
     #attempting to solve the captcha
     captcha_text = attempt_to_solve_captcha(driver)
@@ -72,11 +73,22 @@ def main():
         return
     
     # Wait for the page to load
-    driver.implicitly_wait(5)
+    time.sleep(5)
     try:
         
-        # Select the last week from the decision date dropdown
+        #checking if the decision date dropdown is visible first or not
         
+        try:
+            decision_date_check = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, '//i[contains(@class,"calendar")]')))
+        except TimeoutException:
+            print("Decision Date dropdown not visible after 20 seconds. Please re-run the script")
+            print('''Possible reasons:
+                  1. Captcha solving logic has failed twice 
+                  2. Slow internet connection ''')
+            driver.quit()
+            return
+        
+        # Select the last week from the decision date dropdown
         decision_date_drop_down_element = driver.find_element(By.XPATH, '//i[contains(@class,"calendar")]/parent::a')
         decision_date_drop_down_element.click()
         
@@ -87,40 +99,50 @@ def main():
         
         time.sleep(2)
         
+        # Click the search button to update the list with LATEST UPDATED case(s)
         search_button_element = driver.find_element(By.XPATH, '//i[contains(@class,"search")]/parent::button')
         search_button_element.click()
         
-        #wait for page to load again after updating the list with LATEST UPDATED case
+        #wait for page to load again
         time.sleep(5)     
         
-        # Extract case information
-        cases_table = driver.find_element(By.XPATH, '//tbody[@id="report_body"]')
-        first_case = cases_table.find_element(By.XPATH, './/tr[1]/td[not(contains(@class, "sorting"))]')
-        first_case_heading_element = first_case.find_element(By.XPATH, './/button[@role="link"]')
-        first_case_heading = first_case_heading_element.get_attribute('aria-label')
-        first_case_decision_date = first_case.find_element(By.XPATH, './/span[contains(text(),"Decision Date")]/following-sibling::font[1]').text
+        #check if the table is empty or not
+        try:
+            cases_table_empty = driver.find_element(By.XPATH, '//td[contains(@class,"dataTables_empty")]')
+            print("No updated case(s) found from last week. Exiting...")
+            driver.quit()
+            return
+        except NoSuchElementException:
+            print("Updated case(s) found from last week. Proceeding...")
         
-        if first_case.is_displayed():
-            print(f"First Case: {first_case_heading}")
-            print(f"Decision Date: {first_case_decision_date}")
+            # Extract case information
+            cases_table = driver.find_element(By.XPATH, '//tbody[@id="report_body"]')
+            first_case = cases_table.find_element(By.XPATH, './/tr[1]/td[not(contains(@class, "sorting"))]')
+            first_case_heading_element = first_case.find_element(By.XPATH, './/button[@role="link"]')
+            first_case_heading = first_case_heading_element.get_attribute('aria-label')
+            first_case_decision_date = first_case.find_element(By.XPATH, './/span[contains(text(),"Decision Date")]/following-sibling::font[1]').text
+            
+            if first_case.is_displayed():
+                print(f"First Case: {first_case_heading}")
+                print(f"Decision Date: {first_case_decision_date}")
 
-        first_case_heading_element.click()
-        
-        time.sleep(5)  # Wait for the PDF link to be accessible
-        
-        first_case_pdf_link = driver.find_element(By.XPATH, '//div[@id="viewFiles-body"]/object').get_attribute('data')
-        print("PDF link: ", first_case_pdf_link)
-        
-        #remove unsupported file name characters from pdf_name
-        pdf_name = sanitize_filename(first_case_heading) + ".pdf"
-        pdf_path = os.path.join(os.getcwd(), pdf_name)
-        
-        pdf_response = requests.get(first_case_pdf_link)
-        
-        with open(pdf_path, "wb") as pdf_file:
-            pdf_file.write(pdf_response.content)
-        print(f"PDF saved as {pdf_name}")
-        print(f"PDF Path: {pdf_path}")
+            first_case_heading_element.click()
+            
+            time.sleep(5)  # Wait for the PDF link to be accessible
+            
+            first_case_pdf_link = driver.find_element(By.XPATH, '//div[@id="viewFiles-body"]/object').get_attribute('data')
+            print("PDF link: ", first_case_pdf_link)
+            
+            #remove unsupported file name characters from pdf_name
+            pdf_name = sanitize_filename(first_case_heading) + ".pdf"
+            pdf_path = os.path.join(os.getcwd(), pdf_name)
+            
+            pdf_response = requests.get(first_case_pdf_link)
+            
+            with open(pdf_path, "wb") as pdf_file:
+                pdf_file.write(pdf_response.content)
+            print(f"PDF saved as {pdf_name}")
+            print(f"PDF Path: {pdf_path}")
         
     except Exception as e:
         print(f"An error occurred: \n")

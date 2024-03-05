@@ -1,15 +1,26 @@
 # some utility functions that will be used in the main script.
 # 
-# 1. The `capture_captcha_image` function captures the captcha image and saves it to the current working directory.
+# 1. The `select_high_court` function selects the "High Court" option from the main page where captcha is displayed.
+# 2. The `capture_captcha_image` function captures the captcha image and saves it to the current working directory.
 #       It uses the `screenshot_as_png` method of the WebElement to capture the image and save it as `captcha.png`.
-# 2. The `image_to_base64` function converts the image to a base64 encoded string.
+# 3. The `image_to_base64` function converts the image to a base64 encoded string.
 #       It reads the image file and returns the base64 encoded string.
-# 3. The `sanitize_filename` function sanitizes the filename to avoid any filename with special characters.
+# 4. The `sanitize_filename` function sanitizes the filename to avoid any filename with special characters.
 
 from selenium.webdriver.common.by import By
 import base64
 import os
 import re
+
+def select_high_court(driver):
+    """Select the "High Court" option from the dropdown.
+    
+    Args:
+        driver (Webdriver): Selenium WebDriver instance.
+    """
+    high_court_option = driver.find_element(By.XPATH, '//select[@id="fcourt_type"]//option[contains(text(),"High Court")]')
+    high_court_option.click()
+    print("High Court option selected")
 
 def capture_captcha_image(driver, selector='img[id*="captcha_image"]'):
     """Capture the captcha image and save it to the current working directory.

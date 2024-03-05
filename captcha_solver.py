@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 import time
 
 
-from utils import capture_captcha_image
+from utils import capture_captcha_image, select_high_court
 from ocr_for_captcha import solve_captcha
 
 
@@ -45,6 +45,7 @@ def attempt_to_solve_captcha(driver):
     for attempt in range(2):
         captcha_path = capture_captcha_image(driver)
         captcha_text = solve_captcha(captcha_path)
+        print(f"Captcha image solved to {captcha_text} using OCR")
         if captcha_text:
             enter_captcha_and_search(driver, captcha_text)
             return captcha_text
@@ -63,11 +64,17 @@ def handle_captcha_validation(driver):
         bool: True if the captcha is valid, False otherwise.
     """
     try:
-        captcha_error_box = WebDriverWait(driver, 10).until(
+        captcha_error_box = WebDriverWait(driver, 15).until(
             EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"alert-danger") and contains(text(),"Invalid Captcha")]'))
         )
         print("Captcha is invalid. Retrying....")
+        
         driver.refresh()
+        time.sleep(5)
+        
+        #Selecting the High Court option again
+        select_high_court(driver)
+        
         return attempt_to_solve_captcha(driver)
     except:
         print("Captcha is valid.")
